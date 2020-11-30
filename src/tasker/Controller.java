@@ -24,8 +24,7 @@ public class Controller {
     @FXML
     private VBox tasksContainerBox;
 
-    @FXML
-    private Label taskDisplay;
+    private Main app;
 
     @FXML
     public void addTaskfromTextField(KeyEvent event) {
@@ -40,18 +39,26 @@ public class Controller {
     }
 
     public void addTask(){
-        try {
-            BorderPane line = FXMLLoader.load(getClass().getResource("view/Task.fxml"));
-            tasksContainerBox.getChildren().add(line);
-            String task = taskInput.getText().trim();
-            new Task(task);
-            taskDisplay = (Label) line.lookup("#taskDisplay");
-            taskDisplay.setText(task);
+        String task = taskInput.getText().trim();
+        if(task.isEmpty()) return;
 
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Controller.class.getResource("view/Task.fxml"));
+            BorderPane line = loader.load();
+            tasksContainerBox.getChildren().add(line);
+
+            app.getTaskObservableList().add(new Task(task));
+            Label taskDisplay = (Label) line.lookup("#taskDisplay");
+            taskDisplay.setText(task);
         }catch (IOException e){
             System.out.println("sorry");
             e.printStackTrace();
         }
         taskInput.clear();
+    }
+
+    void setMain(Main app) {
+        this.app = app;
     }
 }
