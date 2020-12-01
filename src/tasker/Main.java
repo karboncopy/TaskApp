@@ -11,24 +11,25 @@ import tasker.model.Task;
 
 public class Main extends Application {
 
-    private ObservableList<Task> taskObservableList = FXCollections.observableArrayList();
+    private ObservableList<Task> observableTaskList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view/TaskViewer.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setMain(this);
         primaryStage.setTitle("Tasker App");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
 
-        Controller controller = loader.getController();
-        controller.setMain(this);
+
     }
 
-    public ObservableList<Task> getTaskObservableList() {
-        return taskObservableList;
+    public ObservableList<Task> getObservableTaskList() {
+        return observableTaskList;
     }
 
     public static void main(String[] args) {

@@ -2,12 +2,15 @@ package tasker.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 
 import java.io.Serializable;
 
 public class Task implements Serializable {
 
     private StringProperty task;
+    private ObservableList<Node> control;
 
     public Task(){}
 
@@ -23,4 +26,11 @@ public class Task implements Serializable {
         this.task.set(task);
     }
 
+    public void setControl(ObservableList<Node> control) {
+        this.control=control;
+    }
+
+    public ObservableList<Node> getControl() {
+        return control;
+    }
 }
