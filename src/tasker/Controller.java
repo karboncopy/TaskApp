@@ -1,17 +1,18 @@
 package tasker;
 
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
+
 import javafx.scene.layout.VBox;
 import tasker.model.Task;
 
-import java.io.IOException;
+
 import java.util.ListIterator;
 
 public class Controller {
@@ -21,7 +22,19 @@ public class Controller {
 
     @FXML
     private VBox tasksContainerBox;
-    private Label taskDisplay;
+
+    @FXML
+    private TableView<Task> taskViewTable;
+
+    @FXML
+    private TableColumn<Task, String> deleteButtonColumn;
+
+    @FXML
+    private TableColumn<Task, String> taskColumn;
+
+    @FXML
+    private TableColumn finishedTaskColumn;
+
     private Main app;
 
     @FXML
@@ -36,27 +49,24 @@ public class Controller {
        addTask();
     }
 
+    public Controller() {
+    }
+
+    @FXML
+    private void initialize(){
+        TableColumn deleteButtonColumn = new TableColumn("");
+        //deleteButtonColumn.setCellValueFactory();
+        taskColumn = new TableColumn<Task, String>("Tasks");
+        taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
+        taskViewTable.getColumns().setAll(taskColumn);
+    }
+
     public void addTask(){
-        String task = taskInput.getText().trim();
-        if(task.isEmpty()) return;
-
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Controller.class.getResource("view/Task.fxml"));
-            loader.setController(this);
-            BorderPane line = loader.load();
-            tasksContainerBox.getChildren().add(line);
-
-            Task newTask = new Task(task);
-            newTask.setControl(line.getChildren());
-            app.getObservableTaskList().add(newTask);
-            taskDisplay = (Label) line.lookup("#taskDisplay");
-            taskDisplay.setText(task);
-
-        }catch (IOException e){
-            System.out.println("sorry");
-            e.printStackTrace();
-        }
+        String taskname = taskInput.getText().trim();
+        if(taskname.isEmpty()) return;
+        Task newTask = new Task(taskname);
+        app.getObservableTaskList().add(newTask);
+        //taskViewTable.getItems().add(newTask);
         taskInput.clear();
     }
 
@@ -72,5 +82,6 @@ public class Controller {
 
     void setMain(Main app) {
         this.app = app;
+        taskViewTable.setItems(app.getObservableTaskList());
     }
 }

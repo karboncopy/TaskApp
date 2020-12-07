@@ -22,8 +22,16 @@ public class Task implements Serializable {
         return task.get();
     }
 
+    public StringProperty getTaskProperty(){
+        return task;
+    }
+
     public void setTask(String task) {
         this.task.set(task);
+    }
+
+    public void setTaskProperty(String taskName){
+        this.task.set(taskName);
     }
 
     public void setControl(ObservableList<Node> control) {

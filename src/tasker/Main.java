@@ -11,13 +11,17 @@ import tasker.model.Task;
 
 public class Main extends Application {
 
-    private ObservableList<Task> observableTaskList = FXCollections.observableArrayList();
+    private ObservableList<Task> observableTaskList = FXCollections.observableArrayList(
+            new Task("test"),
+            new Task("test 2"),
+            new Task("test 3")
+    );
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view/TaskViewer.fxml"));
-        Parent root = loader.load();
+         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setMain(this);
         primaryStage.setTitle("Tasker App");
