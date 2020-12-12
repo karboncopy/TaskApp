@@ -1,19 +1,15 @@
 package tasker;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import tasker.model.Task;
-
-
-import java.util.ListIterator;
 
 public class Controller {
 
@@ -54,11 +50,14 @@ public class Controller {
 
     @FXML
     private void initialize(){
-        TableColumn deleteButtonColumn = new TableColumn("");
-        //deleteButtonColumn.setCellValueFactory();
+
         taskColumn = new TableColumn<Task, String>("Tasks");
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
-        taskViewTable.getColumns().setAll(taskColumn);
+        taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        taskViewTable.getColumns().setAll(addButton("x"), taskColumn);
+
+
     }
 
     public void addTask(){
@@ -66,18 +65,43 @@ public class Controller {
         if(taskname.isEmpty()) return;
         Task newTask = new Task(taskname);
         app.getObservableTaskList().add(newTask);
-        //taskViewTable.getItems().add(newTask);
         taskInput.clear();
     }
 
-    public void deleteTask(Event event){
 
-        ListIterator<Task> taskListIterator = app.getObservableTaskList().listIterator();
-        while(taskListIterator.hasNext()){
-            if(taskListIterator.next().getControl().contains(event.getSource())){
-                taskListIterator.remove();
-            };
-        }
+    private TableColumn<Task, Void> addButton(String title){
+        TableColumn<Task, Void> buttonColumn = new TableColumn<>("");
+
+        Callback<TableColumn<Task, Void>, TableCell<Task, Void>> cellFactory = new Callback<TableColumn<Task, Void>, TableCell<Task, Void>>() {
+            @Override
+            public TableCell<Task, Void> call(final TableColumn<Task, Void> param) {
+                final TableCell<Task, Void> cell = new TableCell<Task, Void>() {
+
+                    private final Button btn = new Button(title);
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            Task task = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedTask: " + task);
+                            app.getObservableTaskList().remove(task);
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+    buttonColumn.setCellFactory(cellFactory);
+    return buttonColumn;
     }
 
     void setMain(Main app) {
