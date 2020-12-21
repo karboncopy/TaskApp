@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import tasker.model.Task;
 
+import java.util.function.Consumer;
+
 public class Controller {
 
     @FXML
@@ -54,8 +56,7 @@ public class Controller {
         taskColumn = new TableColumn<Task, String>("Tasks");
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
         taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        taskViewTable.getColumns().setAll(addButton("x"), taskColumn);
+        taskViewTable.getColumns().setAll(addDeleteButton(), taskColumn, addCheckBox());
 
 
     }
@@ -68,8 +69,20 @@ public class Controller {
         taskInput.clear();
     }
 
+    private TableColumn<Task, Void> addDeleteButton(){
+        return addButton("x",(task -> app.getObservableTaskList().remove(task)));
+    }
 
-    private TableColumn<Task, Void> addButton(String title){
+    private TableColumn<Task, Void> addCheckBox(){
+        System.out.println("task finished");
+        return addButton("v",task ->{
+            task.setFinishedProperty(true);
+            System.out.println(task.isFinished());
+        });
+
+    }
+
+    private TableColumn<Task, Void> addButton(String title, Consumer<Task> func){
         TableColumn<Task, Void> buttonColumn = new TableColumn<>("");
 
         Callback<TableColumn<Task, Void>, TableCell<Task, Void>> cellFactory = new Callback<TableColumn<Task, Void>, TableCell<Task, Void>>() {
@@ -83,7 +96,8 @@ public class Controller {
                         btn.setOnAction((ActionEvent event) -> {
                             Task task = getTableView().getItems().get(getIndex());
                             System.out.println("selectedTask: " + task);
-                            app.getObservableTaskList().remove(task);
+                            func.accept(task);
+
                         });
                     }
 
