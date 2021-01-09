@@ -1,5 +1,6 @@
 package tasker;
 
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,6 +12,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import tasker.model.Task;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
 public class Controller {
@@ -32,6 +35,9 @@ public class Controller {
 
     @FXML
     private TableColumn finishedTaskColumn;
+
+    @FXML
+    private TableColumn<Task, String> createdAtColumn;
 
     private Main app;
 
@@ -55,8 +61,10 @@ public class Controller {
 
         taskColumn = new TableColumn<Task, String>("Tasks");
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
+        createdAtColumn = new TableColumn<>("created at");
+        createdAtColumn.setCellValueFactory(cellData-> cellData.getValue().getCreatedAt());
         taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        taskViewTable.getColumns().setAll(addDeleteButton(), taskColumn, addCheckBox());
+        taskViewTable.getColumns().setAll(addDeleteButton(), taskColumn, createdAtColumn, addCheckBox());
 
 
     }
@@ -65,6 +73,7 @@ public class Controller {
         String taskname = taskInput.getText().trim();
         if(taskname.isEmpty()) return;
         Task newTask = new Task(taskname);
+
         app.getObservableTaskList().add(newTask);
         taskInput.clear();
     }

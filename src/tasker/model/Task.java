@@ -3,22 +3,27 @@ package tasker.model;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Task implements Serializable {
 
     private StringProperty task;
+    private final LocalDateTime createdAt;
+    private StringProperty date;
     private boolean finished;
     private SimpleBooleanProperty finishedProperty;
 
-    public Task(){}
 
     public Task(String task){
         this.task=new SimpleStringProperty(task);
         this.finishedProperty=new SimpleBooleanProperty(true);
+        createdAt = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
+        this.date = new SimpleStringProperty(createdAt.format(dateTimeFormatter));
+
     }
 
     public boolean isFinished() {
@@ -47,6 +52,18 @@ public class Task implements Serializable {
 
     public void setTaskProperty(String taskName){
         this.task.set(taskName);
+    }
+
+    public StringProperty getCreatedAt(String format){
+         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+         this.date.set(createdAt.format(dateTimeFormatter));
+         return this.date;
+    }
+
+    public StringProperty getCreatedAt(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
+        this.date.set(createdAt.format(dateTimeFormatter));
+        return this.date;
     }
 
 }
