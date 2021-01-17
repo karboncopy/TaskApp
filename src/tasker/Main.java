@@ -25,7 +25,9 @@ public class Main extends Application {
         Controller controller = loader.getController();
         controller.setMain(this);
         primaryStage.setTitle("Tasker App");
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/tasker/view/style.css");
+        primaryStage.setScene(scene);
         primaryStage.show();
 
 

@@ -1,0 +1,51 @@
+Scene{
+    -fx-background-color:#0F1343;
+}
+
+AnchorPane{
+    -fx-background-color:#ebe0df;
+}
+
+.table-view .column-header{
+    -fx-background-color:linear-gradient(#8d8f91 0%, #c9ccd1 100%);
+}
+
+.table-row:selected{
+    -fx-text-fill:blue;
+}
+.table-column{
+    -fx-background-color:#fff;
+    -fx-border-width:0;
+    -fx-padding:5px 0 5px 5px;
+    -fx-widtsh:60%;
+
+}
+
+#createdAtColumn{
+    -fx-font-size:8px;
+    -fx-font-color:darkgray;
+}
+
+.finished{
+
+    -fx-font-style:italic;
+    -fx-text-fill:darkgray;
+
+}
+
+.finished .table-column{
+    -fx-background-color:#d6cece;
+}
+
+Button{
+
+   -fx-background-color:
+           #c3c4c4,
+           linear-gradient(#d6d6d6 50%, white 100%),
+           radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+       -fx-background-radius: 30;
+       -fx-background-insets: 0,1,1;
+       -fx-text-fill: gray;
+       -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+

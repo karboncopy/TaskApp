@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,11 +17,12 @@ public class Task implements Serializable {
     private StringProperty date;
     private boolean finished;
     private SimpleBooleanProperty finishedProperty;
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
 
     public Task(String task){
         this.task=new SimpleStringProperty(task);
-        this.finishedProperty=new SimpleBooleanProperty(true);
+        this.finishedProperty=new SimpleBooleanProperty(false);
         createdAt = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
         this.date = new SimpleStringProperty(createdAt.format(dateTimeFormatter));
@@ -31,10 +34,13 @@ public class Task implements Serializable {
     }
 
     public void setFinishedProperty(boolean isFinished) {
-       this.finishedProperty.set(isFinished);
+        propertyChangeSupport.firePropertyChange("finishedProperty", this.finishedProperty, isFinished);
+        setFinished(isFinished);
+        this.finishedProperty.set(isFinished);
     }
 
     public void setFinished(boolean finished) {
+
         this.finished=finished;
     }
 
@@ -61,9 +67,21 @@ public class Task implements Serializable {
     }
 
     public StringProperty getCreatedAt(){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
-        this.date.set(createdAt.format(dateTimeFormatter));
         return this.date;
     }
 
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener){
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "task=" + task +
+                ",\n createdAt=" + createdAt +
+                ",\n date=" + date +
+                ",\n finished=" + finished +
+                ",\n finishedProperty=" + finishedProperty +
+                '}';
+    }
 }

@@ -1,22 +1,28 @@
 package tasker;
 
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import tasker.model.Task;
+import tasker.utilities.ButtonBaseFactory;
+import tasker.view.TaskStatusListener;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
-public class Controller {
+public class Controller<T> {
 
     @FXML
     private TextField taskInput;
@@ -28,16 +34,18 @@ public class Controller {
     private TableView<Task> taskViewTable;
 
     @FXML
-    private TableColumn<Task, String> deleteButtonColumn;
+    private TableColumn<Task, T> deleteButtonColumn;
 
     @FXML
     private TableColumn<Task, String> taskColumn;
 
     @FXML
-    private TableColumn finishedTaskColumn;
+    private TableColumn<Task, T> finishedTaskColumn;
 
     @FXML
     private TableColumn<Task, String> createdAtColumn;
+
+    ButtonBaseFactory baseFactory = new ButtonBaseFactory();
 
     private Main app;
 
@@ -59,14 +67,18 @@ public class Controller {
     @FXML
     private void initialize(){
 
+        deleteButtonColumn = addDeleteButton();
         taskColumn = new TableColumn<Task, String>("Tasks");
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
         createdAtColumn = new TableColumn<>("created at");
         createdAtColumn.setCellValueFactory(cellData-> cellData.getValue().getCreatedAt());
+        finishedTaskColumn = addCheckBox();
         taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        taskViewTable.getColumns().setAll(addDeleteButton(), taskColumn, createdAtColumn, addCheckBox());
+        taskViewTable.getColumns().setAll(deleteButtonColumn, taskColumn, createdAtColumn, finishedTaskColumn);
+       /* taskViewTable.setRowFactory(taskViewTable->new TableRow<Task>(){
 
-
+        });
+*/
     }
 
     public void addTask(){
@@ -78,40 +90,54 @@ public class Controller {
         taskInput.clear();
     }
 
-    private TableColumn<Task, Void> addDeleteButton(){
-        return addButton("x",(task -> app.getObservableTaskList().remove(task)));
+    private TableColumn<Task, T> addDeleteButton(){
+        return addButton("button",(task -> app.getObservableTaskList().remove(task)));
     }
 
-    private TableColumn<Task, Void> addCheckBox(){
-        System.out.println("task finished");
-        return addButton("v",task ->{
-            task.setFinishedProperty(true);
-            System.out.println(task.isFinished());
+    private TableColumn<Task, T> addCheckBox(){
+        return addButton("checkbox",task ->{
+            //TODO toggle finishedProperty
+            if(!task.isFinished()) {
+                task.setFinishedProperty(true);
+            }else{
+                task.setFinishedProperty(false);
+            }
+            task.addPropertyChangeListener("finishedProperty", new TaskStatusListener());
         });
-
     }
 
-    private TableColumn<Task, Void> addButton(String title, Consumer<Task> func){
-        TableColumn<Task, Void> buttonColumn = new TableColumn<>("");
+    private <T> TableColumn<Task, T> addButton(String elemType, Consumer<Task> func){
+        TableColumn<Task, T> buttonColumn = new TableColumn<>("");
 
-        Callback<TableColumn<Task, Void>, TableCell<Task, Void>> cellFactory = new Callback<TableColumn<Task, Void>, TableCell<Task, Void>>() {
+        Callback<TableColumn<Task, T>, TableCell<Task, T>> cellFactory = new Callback<TableColumn<Task, T>, TableCell<Task, T>>() {
             @Override
-            public TableCell<Task, Void> call(final TableColumn<Task, Void> param) {
-                final TableCell<Task, Void> cell = new TableCell<Task, Void>() {
-
-                    private final Button btn = new Button(title);
-
+            public TableCell<Task, T> call(final TableColumn<Task, T> param) {
+                final TableCell<Task, T> cell = new TableCell<Task, T>() {
+                    private final ButtonBase btn = baseFactory.getButtonBase(elemType);
                     {
-                        btn.setOnAction((ActionEvent event) -> {
-                            Task task = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedTask: " + task);
-                            func.accept(task);
+                         btn.setOnAction((ActionEvent event) -> {
+                             //TODO update table rows correctly to reflect change in Task.finishedProperty
+                          /*  ObservableList<String> styleClassList = getTableRow().getStyleClass();
 
+                            System.out.println(getTableRow().toString()+" "+styleClassList);
+
+                            if(styleClassList
+                                    .contains("finished")){
+                                styleClassList
+                                        .remove("finished");
+                            }else{
+                                styleClassList
+                                        .add("finished");
+                            }
+*/
+                            Task task = getTableView().getItems().get(getIndex());
+                            func.accept(task);
+                            System.out.println("selectedTask: " + task.toString());
                         });
                     }
 
                     @Override
-                    public void updateItem(Void item, boolean empty) {
+                    public void updateItem(T item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
@@ -126,6 +152,7 @@ public class Controller {
     buttonColumn.setCellFactory(cellFactory);
     return buttonColumn;
     }
+
 
     void setMain(Main app) {
         this.app = app;
