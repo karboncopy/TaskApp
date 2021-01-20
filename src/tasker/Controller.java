@@ -72,13 +72,9 @@ public class Controller<T> {
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
         createdAtColumn = new TableColumn<>("created at");
         createdAtColumn.setCellValueFactory(cellData-> cellData.getValue().getCreatedAt());
-        finishedTaskColumn = addCheckBox();
         taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        taskViewTable.getColumns().setAll(deleteButtonColumn, taskColumn, createdAtColumn, finishedTaskColumn);
-       /* taskViewTable.setRowFactory(taskViewTable->new TableRow<Task>(){
+        taskViewTable.getColumns().setAll(deleteButtonColumn, taskColumn, createdAtColumn);
 
-        });
-*/
     }
 
     public void addTask(){
@@ -117,19 +113,7 @@ public class Controller<T> {
                     {
                          btn.setOnAction((ActionEvent event) -> {
                              //TODO update table rows correctly to reflect change in Task.finishedProperty
-                          /*  ObservableList<String> styleClassList = getTableRow().getStyleClass();
 
-                            System.out.println(getTableRow().toString()+" "+styleClassList);
-
-                            if(styleClassList
-                                    .contains("finished")){
-                                styleClassList
-                                        .remove("finished");
-                            }else{
-                                styleClassList
-                                        .add("finished");
-                            }
-*/
                             Task task = getTableView().getItems().get(getIndex());
                             func.accept(task);
                             System.out.println("selectedTask: " + task.toString());

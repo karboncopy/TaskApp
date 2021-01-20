@@ -10,15 +10,22 @@ AnchorPane{
     -fx-background-color:linear-gradient(#8d8f91 0%, #c9ccd1 100%);
 }
 
-.table-row:selected{
-    -fx-text-fill:blue;
+.table-row: focused{
+    -fx-background-color:#ebe9e4;
 }
 .table-column{
     -fx-background-color:#fff;
     -fx-border-width:0;
     -fx-padding:5px 0 5px 5px;
-    -fx-widtsh:60%;
+    -fx-width:60%;
+    -fx-text-fill:red;
+}
 
+
+
+.table-row-cell: focused{
+    -fx-background-color:#ebe9e4;
+    -fx-text-fill:blue;
 }
 
 #createdAtColumn{
