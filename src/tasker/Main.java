@@ -21,13 +21,17 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view/TaskViewer.fxml"));
-         Parent root = loader.load();
+        Parent root = loader.load();
+
         Controller controller = loader.getController();
         controller.setMain(this);
         primaryStage.setTitle("Tasker App");
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/tasker/view/style.css");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event -> {
+
+        });
         primaryStage.show();
 
 

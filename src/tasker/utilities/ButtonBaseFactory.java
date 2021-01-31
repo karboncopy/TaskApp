@@ -9,7 +9,7 @@ public class ButtonBaseFactory {
 
     public ButtonBase getButtonBase(String type) {
         if (type.equalsIgnoreCase("BUTTON")) {
-            return new Button();
+            return new Button("x");
         }else if(type.equalsIgnoreCase("CHECKBOX")){
             return new CheckBox();
         }
