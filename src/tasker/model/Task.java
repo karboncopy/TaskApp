@@ -20,13 +20,15 @@ public class Task implements Serializable {
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
 
+    public Task(){
+        this(null);
+    }
     public Task(String task){
         this.task=new SimpleStringProperty(task);
         this.finishedProperty=new SimpleBooleanProperty(false);
         createdAt = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
         this.date = new SimpleStringProperty(createdAt.format(dateTimeFormatter));
-
     }
 
     public boolean isFinished() {
