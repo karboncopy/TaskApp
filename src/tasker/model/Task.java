@@ -3,17 +3,19 @@ package tasker.model;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import tasker.utilities.DateAdapter;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
-public class Task implements Serializable {
+public class Task  {
 
     private StringProperty task;
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt = null;
     private StringProperty date;
     private boolean finished;
     private SimpleBooleanProperty finishedProperty;
@@ -26,7 +28,7 @@ public class Task implements Serializable {
     public Task(String task){
         this.task=new SimpleStringProperty(task);
         this.finishedProperty=new SimpleBooleanProperty(false);
-        createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
         this.date = new SimpleStringProperty(createdAt.format(dateTimeFormatter));
     }
@@ -62,14 +64,20 @@ public class Task implements Serializable {
         this.task.set(taskName);
     }
 
+
     public StringProperty getCreatedAt(String format){
          DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
-         this.date.set(createdAt.format(dateTimeFormatter));
+         this.date.set(this.createdAt.format(dateTimeFormatter));
          return this.date;
     }
 
     public StringProperty getCreatedAt(){
         return this.date;
+    }
+
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    public LocalDateTime getDate(){
+        return this.createdAt;
     }
 
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener){
