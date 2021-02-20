@@ -2,29 +2,54 @@
 <tasks>
     <tasklist>
         <taskelement>
-            <date>2021-02-07 20:56:23</date>
+            <timestamp>2021-02-11 18:30:43</timestamp>
+            <finished>false</finished>
+            <task>8</task>
+        </taskelement>
+        <taskelement>
+            <timestamp>2021-02-11 18:30:42</timestamp>
+            <finished>false</finished>
+            <task>7</task>
+        </taskelement>
+        <taskelement>
+            <timestamp>2021-02-11 18:30:39</timestamp>
             <finished>false</finished>
             <task>2</task>
         </taskelement>
         <taskelement>
-            <date>2021-02-07 20:56:23</date>
+            <timestamp>2021-02-12 20:12:11</timestamp>
             <finished>false</finished>
-            <task>valentine's day gift</task>
+            <task>test</task>
         </taskelement>
         <taskelement>
-            <date>2021-02-07 20:56:32</date>
+            <timestamp>2021-02-13 11:17:50</timestamp>
             <finished>false</finished>
-            <task>5</task>
+            <task>13.02.2021</task>
         </taskelement>
         <taskelement>
-            <date>2021-02-07 20:56:33</date>
+            <timestamp>2021-02-15 19:26:44</timestamp>
             <finished>false</finished>
-            <task>4</task>
+            <task>15.02.2021</task>
         </taskelement>
         <taskelement>
-            <date>2021-02-07 20:56:34</date>
+            <timestamp>2021-02-16 21:42:26</timestamp>
             <finished>false</finished>
-            <task>5</task>
+            <task>16 februarie</task>
+        </taskelement>
+        <taskelement>
+            <timestamp>2021-02-16 21:53:58</timestamp>
+            <finished>false</finished>
+            <task>&lt;Separator layoutX="39.0" layoutY="64.0" opacity="0.5" prefHeight="14.0" prefWidth="465.0" /&gt;</task>
+        </taskelement>
+        <taskelement>
+            <timestamp>2021-02-18 18:29:44</timestamp>
+            <finished>false</finished>
+            <task>18 februarie 2021</task>
+        </taskelement>
+        <taskelement>
+            <timestamp>2021-02-20 15:46:17</timestamp>
+            <finished>false</finished>
+            <task>20 februarie 2021</task>
         </taskelement>
     </tasklist>
 </tasks>

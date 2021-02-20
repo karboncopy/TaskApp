@@ -71,7 +71,7 @@ public class Controller<T> {
         taskColumn = new TableColumn<Task, String>("Tasks");
         taskColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("Task"));
         createdAtColumn = new TableColumn<>("created at");
-        createdAtColumn.setCellValueFactory(cellData-> cellData.getValue().getCreatedAt());
+        createdAtColumn.setCellValueFactory(cellData-> cellData.getValue().getCreatedAt("d MMM uuuu"));
         taskViewTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         taskViewTable.getColumns().setAll(deleteButtonColumn, taskColumn, createdAtColumn);
 

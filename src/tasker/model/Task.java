@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import tasker.utilities.DateAdapter;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -15,7 +16,9 @@ import java.util.Date;
 public class Task  {
 
     private StringProperty task;
-    private LocalDateTime createdAt = null;
+    @XmlElement(name="timestamp")
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    public  LocalDateTime createdAt=null ; //TODO public variable no good; this is a hotfix to solve the bug showing woring creation date
     private StringProperty date;
     private boolean finished;
     private SimpleBooleanProperty finishedProperty;
@@ -28,7 +31,7 @@ public class Task  {
     public Task(String task){
         this.task=new SimpleStringProperty(task);
         this.finishedProperty=new SimpleBooleanProperty(false);
-        this.createdAt = LocalDateTime.now();
+        if(createdAt==null)  createdAt = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E, dd MMM");
         this.date = new SimpleStringProperty(createdAt.format(dateTimeFormatter));
     }
@@ -75,7 +78,7 @@ public class Task  {
         return this.date;
     }
 
-    @XmlJavaTypeAdapter(DateAdapter.class)
+
     public LocalDateTime getDate(){
         return this.createdAt;
     }

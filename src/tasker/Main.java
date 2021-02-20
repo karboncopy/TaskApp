@@ -10,26 +10,27 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import tasker.model.Task;
 import tasker.model.TaskListWrapper;
+import tasker.utilities.FileReaderWriter;
+import tasker.utilities.XmlFileProcessor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.util.List;
 
 public class Main extends Application {
 
-    private ObservableList<Task> observableTaskList = FXCollections.observableArrayList(
-            new Task("test"),
-            new Task("test 2"),
-            new Task("test 3")
-    );
+    private ObservableList<Task> observableTaskList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view/TaskViewer.fxml"));
         Parent root = loader.load();
-        loadTaskListFromFile("tasks.xml");
+        FileReaderWriter fileProcessor = new XmlFileProcessor();
+        List<Task> listFromFile = fileProcessor.readFromFile("tasks.xml");
+        observableTaskList.addAll(listFromFile);
         Controller controller = loader.getController();
         controller.setMain(this);
         primaryStage.setTitle("Tasker App");
@@ -37,12 +38,9 @@ public class Main extends Application {
         scene.getStylesheets().add("/tasker/view/style.css");
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(event -> {
-                saveTaskListToFile("tasks.xml");
+            fileProcessor.writeToFile("tasks.xml", observableTaskList);
         });
         primaryStage.show();
-
-
-
     }
 
     public ObservableList<Task> getObservableTaskList() {
@@ -53,42 +51,6 @@ public class Main extends Application {
         launch(args);
     }
 
-    public void loadTaskListFromFile(String filename){
-            File file = new File(filename);;
-        try {
 
-            JAXBContext context = JAXBContext.newInstance(TaskListWrapper.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-
-            TaskListWrapper wrapper = (TaskListWrapper) unmarshaller.unmarshal(file);
-            observableTaskList.clear();
-            observableTaskList.addAll(wrapper.getTasks());
-        }catch (Exception e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Could not load data");
-            alert.setContentText("Could not load data from file:\n" + file.getPath());
-
-            alert.showAndWait();
-        }
-
-
-    }
-
-    public void saveTaskListToFile(String filename){
-        try{
-            File file = new File(filename);
-            JAXBContext context = JAXBContext.newInstance(TaskListWrapper.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            TaskListWrapper wrapper = new TaskListWrapper();
-            wrapper.setTasks(observableTaskList);
-            marshaller.marshal(wrapper, file);
-            marshaller.marshal(wrapper, System.out);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 }
